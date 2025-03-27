@@ -34,10 +34,10 @@ def image_to_svg(image: Image.Image):
 
 # Interface do Streamlit
 st.sidebar.title("Editor de Imagens")
-option = st.sidebar.radio("Escolha uma opção", ["Remover Fundo", "Vetorizar Imagem"])
+option = st.sidebar.radio("Escolha uma opção", ["Remover Fundo"])
 
 # Define o título conforme a opção escolhida
-st.title("Remover Fundo" if option == "Remover Fundo" else "Vetorizar Imagem")
+st.title("Remover Fundo")
 
 # Upload de imagem
 uploaded_file = st.file_uploader("Carregue uma imagem", type=["png", "jpg", "jpeg"])
@@ -52,9 +52,9 @@ if uploaded_file is not None:
         progress.progress(50)
         no_bg = remove_background(image)
         progress.progress(100)
-        st.image(no_bg, caption="Imagem sem fundo", use_container_width=False, width=400)
+        st.image(no_bg, caption="Prévia da imagem", use_container_width=False, width=200)
         
-        # Botão para baixar a imagem sem fundo
+        # Botão para baixar a imagem sem fundo abaixo da barra de progresso
         img_byte_arr = BytesIO()
         no_bg.save(img_byte_arr, format='PNG')
         st.download_button("Baixar imagem sem fundo", data=img_byte_arr.getvalue(), file_name="imagem_sem_fundo.png", mime="image/png")
@@ -63,10 +63,7 @@ if uploaded_file is not None:
         progress.progress(50)
         svg_output = image_to_svg(image)
         progress.progress(100)
-        
-        # Exibe um preview e botão de download
-        st.markdown("### Pré-visualização da Imagem Vetorizada")
-        st.code(svg_output[:500] + "...", language="xml")  # Exibe apenas parte do código para facilitar a visualização
+
         st.download_button("Baixar imagem vetorizada (SVG)", data=svg_output, file_name="imagem_vetorizada.svg", mime="image/svg+xml")
 
 # Adicionando anúncios na lateral
@@ -74,10 +71,17 @@ st.sidebar.markdown("### Anúncio")
 st.sidebar.markdown(
     """
     <div style="text-align:center;">
-        <a href="https://link-do-anunciante.com" target="_blank">
-            <img src="https://link-da-imagem-do-anuncio.com/banner.jpg" width="300">
-        </a>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXX"   # Substitua pelo seu ID de cliente do AdSense
+             data-ad-slot="XXXXXXXXXX"                  # Substitua pelo seu ID do slot de anúncio
+             data-ad-format="auto"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
     </div>
     """,
     unsafe_allow_html=True
 )
+
